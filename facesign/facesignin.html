@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Sign In</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        // Replace with your Azure Face API key and endpoint
+        const subscriptionKey = 'YOUR_FACE_API_KEY';
+        const endpoint = 'YOUR_FACE_API_ENDPOINT';
+
+        function detectFace() {
+            const imageUrl = document.getElementById('imageUrl').value;
+
+            $.ajax({
+                url: `${endpoint}/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false`,
+                type: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'Ocp-Apim-Subscription-Key': subscriptionKey
+                },
+                data: JSON.stringify({ url: imageUrl }),
+                success: function (data) {
+                    if (data.length > 0) {
+                        const faceId = data[0].faceId;
+                        authenticateFace(faceId);
+                    } else {
+                        alert('No face detected. Please try again.');
+                    }
+                },
+                error: function (error) {
+                    alert('Error detecting face. Please try again.');
+                    console.error(error);
+                }
+            });
+        }
+
+        function authenticateFace(faceId) {
+            // You can implement further authentication logic here
+            alert('Face authenticated successfully!');
+        }
+    </script>
+</head>
+<body>
+    <h1>Face Sign In</h1>
+    <label for="imageUrl">Image URL:</label>
+    <input type="text" id="imageUrl" placeholder="Enter image URL">
+    <button onclick="detectFace()">Sign In with Face</button>
+</body>
+</html>
